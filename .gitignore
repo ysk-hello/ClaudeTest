@@ -1,0 +1,5 @@
+ClaudeTest/bin/
+ClaudeTest/obj/
+.claude/
+.vs/
+/ClaudeTest/ClaudeTest.csproj.user
