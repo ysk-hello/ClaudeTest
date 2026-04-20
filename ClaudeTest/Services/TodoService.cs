@@ -10,15 +10,11 @@ namespace ClaudeTest.Services
     public class TodoService : ITodoService
     {
         private readonly ITodoRepository _todoRepository;
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly ITransactionRunner _transactionRunner;
 
-        /// <summary>各依存をコンストラクタ注入で受け取る。</summary>
-        public TodoService(ITodoRepository todoRepository, ICategoryRepository categoryRepository, ITransactionRunner transactionRunner)
+        /// <summary>ITodoRepositoryをコンストラクタ注入で受け取る。</summary>
+        public TodoService(ITodoRepository todoRepository)
         {
             _todoRepository = todoRepository;
-            _categoryRepository = categoryRepository;
-            _transactionRunner = transactionRunner;
         }
 
         /// <summary>全Todoを取得する。</summary>
@@ -62,21 +58,6 @@ namespace ClaudeTest.Services
                 ?? throw new InvalidOperationException($"Todo(Id={todoId})が見つかりません。");
             _todoRepository.delete(todo);
             await _todoRepository.saveAsync();
-        }
-
-        /// <summary>
-        /// ViewModelから渡されたaddCategoryAction・addTodoActionをトランザクション内で順に実行する。
-        /// Category保存でIDを確定させてからTodoをステージし、最後にまとめて保存する。
-        /// </summary>
-        public async Task createTodoWithNewCategoryAsync(Func<Task> addCategoryAction, Func<Task> addTodoAction)
-        {
-            await _transactionRunner.executeInTransactionAsync(async () =>
-            {
-                await addCategoryAction();
-                await _categoryRepository.saveAsync();  // category.Id を確定
-                await addTodoAction();                   // todo.CategoryId は呼び出し元デリゲートで設定済み
-                await _todoRepository.saveAsync();
-            });
         }
     }
 }

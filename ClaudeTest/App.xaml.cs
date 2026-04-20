@@ -43,6 +43,7 @@ namespace ClaudeTest
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ITodoService, TodoService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ITodoCategoryService, TodoCategoryService>();
             services.AddTransient<MainViewModel>();
 
             return services.BuildServiceProvider();

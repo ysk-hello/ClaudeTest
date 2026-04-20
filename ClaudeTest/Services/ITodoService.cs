@@ -1,5 +1,4 @@
 using ClaudeTest.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,9 +22,5 @@ namespace ClaudeTest.Services
         /// <summary>Todoをコンテキストにステージする（保存しない）。</summary>
         Task addAsync(Todo todo);
 
-        /// <summary>
-        /// addCategoryAction・addTodoAction をトランザクション内で順に実行し、TodoとCategoryを同時保存する。
-        /// </summary>
-        Task createTodoWithNewCategoryAsync(Func<Task> addCategoryAction, Func<Task> addTodoAction);
     }
 }

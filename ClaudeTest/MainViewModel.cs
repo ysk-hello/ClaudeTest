@@ -15,6 +15,7 @@ namespace ClaudeTest
     {
         private readonly ITodoService _todoService;
         private readonly ICategoryService _categoryService;
+        private readonly ITodoCategoryService _todoCategoryService;
         private string _newTodoTitle = string.Empty;
         private string _newCategoryName = string.Empty;
 
@@ -48,10 +49,11 @@ namespace ClaudeTest
         public ICommand ShowMessageCommand { get; }
 
         /// <summary>サービスをDI経由で受け取るコンストラクタ。</summary>
-        public MainViewModel(ITodoService todoService, ICategoryService categoryService)
+        public MainViewModel(ITodoService todoService, ICategoryService categoryService, ITodoCategoryService todoCategoryService)
         {
             _todoService = todoService;
             _categoryService = categoryService;
+            _todoCategoryService = todoCategoryService;
             AddTodoCommand = new RelayCommand(async () => await addTodoAsync());
             ShowMessageCommand = new RelayCommand(requestShowMessage);
             _ = loadTodosAsync();
@@ -69,7 +71,7 @@ namespace ClaudeTest
             var todo = new Todo { Title = NewTodoTitle.Trim(), CreatedAt = DateTime.UtcNow };
             var category = new Category { Name = NewCategoryName.Trim() };
 
-            await _todoService.createTodoWithNewCategoryAsync(
+            await _todoCategoryService.createTodoWithNewCategoryAsync(
                 addCategoryAction: () => _categoryService.addAsync(category),
                 addTodoAction: () =>
                 {
